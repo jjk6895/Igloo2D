@@ -1,6 +1,6 @@
 #include "Application.h"
 
-Application::Application(HINSTANCE hInstance)
+Application::Application(HINSTANCE hInstance, int width, int height) : clientWidth(width), clientHeight(height)
 {
 	WNDCLASSEX wc = { 0 };
 	static bool classRegistered = false;
@@ -12,11 +12,20 @@ Application::Application(HINSTANCE hInstance)
 		wc.lpszClassName = L"IglooWindow";
 		RegisterClassEx(&wc);
 		classRegistered = true;
-
 	}
 
 	const DWORD style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-	hwnd = CreateWindowEx(0, wc.lpszClassName, L"Igloo 2D", style, CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, NULL, NULL, hInstance, nullptr);
+
+	RECT wr;
+	wr.left = 0;
+	wr.top = 0;
+	wr.right = clientWidth;
+	wr.bottom = clientHeight;
+	AdjustWindowRect(&wr, style, FALSE);
+
+	hwnd = CreateWindowEx(0, wc.lpszClassName, L"Igloo 2D", style, 
+		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top, 
+		NULL, NULL, hInstance, nullptr);
 	ShowWindow(hwnd, SW_SHOWNORMAL);
 	
 	HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, d2dFactory.put());
