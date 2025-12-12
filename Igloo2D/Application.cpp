@@ -35,9 +35,15 @@ void Application::Start()
 		else
 		{
 			// Do game shit
+			
 		}
 
 	}
+}
+
+bool Application::IsKeyDown(int keyCode)
+{
+	return GetAsyncKeyState(keyCode) & 0x8000;
 }
 
 LRESULT Application::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
